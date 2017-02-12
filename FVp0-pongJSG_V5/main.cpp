@@ -55,6 +55,7 @@ int main()
     sprite2.setOrigin(26/2,119/2);
     //Cojo el sprite que me interesa por defecto del sheet
     sprite2.setTextureRect(sf::IntRect(0*26, 0*119, 26, 119));
+    sprite2.setColor(sf::Color(0,255,0));
     // Lo dispongo en el centro de la pantalla
     sprite2.setPosition(40, 240);
     
