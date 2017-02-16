@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+using namespace std;
 
 #define kVel 5
 
@@ -89,7 +90,6 @@ int main()
     // ejecutar el programa mientras la ventana esté abierta
     while (window.isOpen())
     {
-        
         // limpiamos la ventana con el color negro
         window.clear(sf::Color::Black);
         // verificamos los bordes de la ventana y cambiamos
@@ -104,8 +104,16 @@ int main()
             yincremento =-yincremento;
         x = x + xincremento;
         y = y + yincremento;
+        
+        if(sprite2.getPosition().x <= x ){
+            
+            cout<<"toca BOSS"<<endl;
+        }
+        
         //pasamos las nuevas coordenadas al objeto circulo1
         spriteBola.setPosition(x,y);
+        
+        
         // JUGADOR BOSS
         if(y >= techo+palaLargo/2 && y <= piso-palaLargo/2){                  
             for(int i = 0; i<=y;i++){
@@ -125,11 +133,7 @@ int main()
                     
                 // para cuando esta parado
                 case sf::Event::KeyReleased:
-                /*    sprite.setTextureRect(sf::IntRect(0*75, 2*75, 75, 75));
-                    sprite.setScale(-1,1);
-                    sprite2.setTextureRect(sf::IntRect(5.5*75, 3*75, 75, 75));
-                    sprite2.setScale(-1,1);
-                 */
+                
                 break;
                 
                 //Se pulsó una tecla, imprimo su codigo
@@ -174,8 +178,6 @@ int main()
             }
         }
 
-        
-        
         window.clear();
         window.draw(spriteBola);
         window.draw(spriteFondo);
