@@ -56,7 +56,6 @@ int main()
     sprite2.setOrigin(26/2,119/2);
     //Cojo el sprite que me interesa por defecto del sheet
     sprite2.setTextureRect(sf::IntRect(0*26, 0*119, 26, 119));
-    sprite2.setColor(sf::Color(0,255,0));
     // Lo dispongo en el centro de la pantalla
     sprite2.setPosition(40, 240);
     
@@ -94,24 +93,35 @@ int main()
         window.clear(sf::Color::Black);
         // verificamos los bordes de la ventana y cambiamos
         // el signo del incremento de x,y
-        if (x <= pared_izq+radio) 
+        if (x <= sprite2.getPosition().x+palaAncho) 
              xincremento = abs(xincremento);
-        if (x >= pared_der-radio)
+        
+        if (x >= sprite.getPosition().x-palaAncho && y<= sprite.getPosition().y+palaLargo/2 ){
             xincremento =-xincremento;
+        }  
+        if (x >= sprite.getPosition().x-palaAncho && y>= sprite.getPosition().y+palaLargo/2 ){
+            
+            cout<<"Punto perdido"<<endl;
+            
+        }
+        
+            
+        
+        
         if (y <= techo+radio)
             yincremento = abs(yincremento);
         if (y >= piso-radio)
             yincremento =-yincremento;
+        
+        
         x = x + xincremento;
         y = y + yincremento;
         
-        if(sprite2.getPosition().x <= x ){
-            
-            cout<<"toca BOSS"<<endl;
-        }
+        
         
         //pasamos las nuevas coordenadas al objeto circulo1
         spriteBola.setPosition(x,y);
+        
         
         
         // JUGADOR BOSS
