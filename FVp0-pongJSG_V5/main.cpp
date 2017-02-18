@@ -1,8 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <string>
 using namespace std;
 
-#define kVel 5
+#define kVel 7
 
 int main()
 {
@@ -19,9 +20,39 @@ int main()
     int xincremento = 3, yincremento = 3;
     int pared_izq = 0, pared_der = anchoJuego;
     int techo = 70, piso = 410;
+    
+    int vidasJ1 = 3;
+    int vidasBOSS = 3;
+    int toques = 0;
+    
+    sf::Font fuente;
+    // Intentamos cargarla
+    if (!fuente.loadFromFile("resources/fuente.ttf"))
+    {
+            return EXIT_FAILURE;
+            exit(0);
+    }
+
+    // Creamos un objeto texto
+    sf::Text beats;
+    beats.setFont(fuente);
+    beats.setPosition(40,70);
+    beats.setColor(sf::Color(255,255,255));
+    
+    sf::Text contVida1;
+    beats.setFont(fuente);
+    beats.setPosition(140,170);
+    beats.setColor(sf::Color(255,255,255));
+    
+    sf::Text contVida2;
+    beats.setFont(fuente);
+    beats.setPosition(180,190);
+    beats.setColor(sf::Color(255,255,255));
+    
 
     //Cargo la imagen donde reside la textura del sprite
     sf::Texture texJ1;
+    sf::Texture texJ2;
     sf::Texture texJ2;
     sf::Texture texbola;
     sf::Texture texmarcador;
@@ -93,15 +124,18 @@ int main()
         window.clear(sf::Color::Black);
         // verificamos los bordes de la ventana y cambiamos
         // el signo del incremento de x,y
-        if (x <= sprite2.getPosition().x+palaAncho) 
+        if (x <= sprite2.getPosition().x+palaAncho) // reboe BOSS
              xincremento = abs(xincremento);
         
         if (x >= sprite.getPosition().x-palaAncho && y<= sprite.getPosition().y+palaLargo/2 ){
             xincremento =-xincremento;
+            toques++;
+            cout<<toques<<endl;
         }  
         if (x >= sprite.getPosition().x-palaAncho && y>= sprite.getPosition().y+palaLargo/2 ){
             
             cout<<"Punto perdido"<<endl;
+            vidasJ1--;
             
         }
         
@@ -189,12 +223,14 @@ int main()
         }
 
         window.clear();
+        
         window.draw(spriteBola);
         window.draw(spriteFondo);
         window.draw(spriteMarcador);
         window.draw(sprite);
         window.draw(sprite2);
         
+        window.draw(beats);
         // mostramos ventana en la pantalla
         window.display();
 
