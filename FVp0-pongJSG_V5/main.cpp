@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-#define kVel 7
+#define kVel 8
 
 int main()
 {
@@ -17,42 +17,40 @@ int main()
     window.setVerticalSyncEnabled(true);
     
     int x = 1, y = 1;
-    int xincremento = 3, yincremento = 3;
+    int xincremento = 4, yincremento = 4;
     int pared_izq = 0, pared_der = anchoJuego;
     int techo = 70, piso = 410;
     
+    // variables para contadores
     int vidasJ1 = 3;
-    int vidasBOSS = 3;
+    int vidasJ2 = 3;
     int toques = 0;
     
     sf::Font fuente;
-    // Intentamos cargarla
-    if (!fuente.loadFromFile("resources/fuente.ttf"))
-    {
-            return EXIT_FAILURE;
-            exit(0);
+    if (!fuente.loadFromFile("resources/fuente.ttf")){
+        std::cerr << "Error cargando la fuente";
+        exit(0);
     }
 
     // Creamos un objeto texto
     sf::Text beats;
     beats.setFont(fuente);
-    beats.setPosition(40,70);
+    beats.setPosition(anchoJuego/2,70);
     beats.setColor(sf::Color(255,255,255));
     
-    sf::Text contVida1;
-    beats.setFont(fuente);
-    beats.setPosition(140,170);
-    beats.setColor(sf::Color(255,255,255));
+    sf::Text vida1;
+    vida1.setFont(fuente);
+    vida1.setPosition(40,70);
+    vida1.setColor(sf::Color(255,255,255));
     
-    sf::Text contVida2;
-    beats.setFont(fuente);
-    beats.setPosition(180,190);
-    beats.setColor(sf::Color(255,255,255));
+    sf::Text vida2;
+    vida2.setFont(fuente);
+    vida2.setPosition(240,70);
+    vida2.setColor(sf::Color(255,255,255));
     
 
     //Cargo la imagen donde reside la textura del sprite
     sf::Texture texJ1;
-    sf::Texture texJ2;
     sf::Texture texJ2;
     sf::Texture texbola;
     sf::Texture texmarcador;
@@ -79,7 +77,7 @@ int main()
     sprite.setOrigin(26/2,119/2);
     //Cojo el sprite que me interesa por defecto del sheet
     sprite.setTextureRect(sf::IntRect(0*26, 0*119, 26, 119));
-    // Lo dispongo en el centro de la pantalla
+    // Lo dispongo en la pantalla
     sprite.setPosition(600, 240);
 
     /* PLAYER 2 */
@@ -87,7 +85,7 @@ int main()
     sprite2.setOrigin(26/2,119/2);
     //Cojo el sprite que me interesa por defecto del sheet
     sprite2.setTextureRect(sf::IntRect(0*26, 0*119, 26, 119));
-    // Lo dispongo en el centro de la pantalla
+    // Lo dispongo en la pantalla
     sprite2.setPosition(40, 240);
     
     /*FONDO*/
@@ -120,34 +118,52 @@ int main()
     // ejecutar el programa mientras la ventana esté abierta
     while (window.isOpen())
     {
+       /* std::string m = std::to_string(toques);
+        beats.setString(m);*/
+        
         // limpiamos la ventana con el color negro
         window.clear(sf::Color::Black);
         // verificamos los bordes de la ventana y cambiamos
         // el signo del incremento de x,y
-        if (x <= sprite2.getPosition().x+palaAncho) // reboe BOSS
-             xincremento = abs(xincremento);
         
-        if (x >= sprite.getPosition().x-palaAncho && y<= sprite.getPosition().y+palaLargo/2 ){
-            xincremento =-xincremento;
-            toques++;
-            cout<<toques<<endl;
-        }  
-        if (x >= sprite.getPosition().x-palaAncho && y>= sprite.getPosition().y+palaLargo/2 ){
-            
-            cout<<"Punto perdido"<<endl;
-            vidasJ1--;
-            
-        }
-        
-            
-        
-        
+        // Control de rebote Techo y suelo eje Y
         if (y <= techo+radio)
             yincremento = abs(yincremento);
         if (y >= piso-radio)
             yincremento =-yincremento;
         
+        // rebote BOSS
+        if (x <= sprite2.getPosition().x+palaAncho) 
+             xincremento = abs(xincremento);
         
+        // rebote J1 /****** FALLA  ALTURA EN LA CONDICION********/
+        if (x >= sprite.getPosition().x-palaAncho && y<= sprite.getPosition().y+palaLargo/2 ){
+            xincremento =-xincremento;
+            toques++;
+            cout<<toques<<endl;
+        }  
+        
+        // si toca La pared DCHA
+        if (x >= sprite.getPosition().x-palaAncho && y>= sprite.getPosition().y+palaLargo/2 &&
+                x>= spriteBola.getPosition().x){
+            
+           
+            vidasJ1--;
+            toques = 0;
+            x = anchoJuego/2;
+            y = altoJuego/2;
+            cout<<"Vidas: "<<vidasJ1<<endl;
+            cout<<"Punto perdido"<<endl;
+            
+            if(vidasJ1 == 0){
+                cout<<"Game Over"<<endl;
+            }
+            
+        }
+            
+        
+        
+        // actualizo valores
         x = x + xincremento;
         y = y + yincremento;
         
@@ -155,9 +171,7 @@ int main()
         
         //pasamos las nuevas coordenadas al objeto circulo1
         spriteBola.setPosition(x,y);
-        
-        
-        
+         
         // JUGADOR BOSS
         if(y >= techo+palaLargo/2 && y <= piso-palaLargo/2){                  
             for(int i = 0; i<=y;i++){
