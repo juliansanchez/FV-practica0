@@ -52,10 +52,6 @@ int main()
     //Cargo la imagen donde reside la textura del sprite
     sf::Texture texJ1;
     sf::Texture texJ2;
-<<<<<<< HEAD
-  
-=======
->>>>>>> ReboteJ1
     sf::Texture texbola;
     sf::Texture texmarcador;
     sf::Texture fondo;
