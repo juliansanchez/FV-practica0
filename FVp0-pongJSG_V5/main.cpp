@@ -1,23 +1,25 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
+#include <sstream>
+
 using namespace std;
 
-#define kVel 8
+#define kVel 10
 
 int main()
 {
     int anchoJuego = 640;
     int altoJuego = 480;
     int radio = 14;
-    int palaLargo = 119, palaAncho=26; 
+    int palaLargo = 120, palaAncho=26; 
    //Creamos una ventana 
     sf::RenderWindow window(sf::VideoMode(anchoJuego, altoJuego), "P0. Fundamentos de los Videojuegos. DCCIA");
     // sincronizamos la frecuencia de la ventana con la del monitor
     window.setVerticalSyncEnabled(true);
     
     int x = 1, y = 1;
-    int xincremento = 4, yincremento = 4;
+    int xincremento = 5, yincremento = 5;
     int pared_izq = 0, pared_der = anchoJuego;
     int techo = 70, piso = 410;
     
@@ -47,7 +49,6 @@ int main()
     vida2.setFont(fuente);
     vida2.setPosition(240,70);
     vida2.setColor(sf::Color(255,255,255));
-    
 
     //Cargo la imagen donde reside la textura del sprite
     sf::Texture texJ1;
@@ -74,17 +75,17 @@ int main()
     
     /* PLAYER 1 */
     //Le pongo el centroide donde corresponde
-    sprite.setOrigin(26/2,119/2);
+    sprite.setOrigin(palaAncho/2,palaLargo/2);
     //Cojo el sprite que me interesa por defecto del sheet
-    sprite.setTextureRect(sf::IntRect(0*26, 0*119, 26, 119));
+    sprite.setTextureRect(sf::IntRect(0*palaAncho, 0*palaLargo, palaAncho, palaLargo));
     // Lo dispongo en la pantalla
     sprite.setPosition(600, 240);
 
     /* PLAYER 2 */
     //Le pongo el centroide donde corresponde
-    sprite2.setOrigin(26/2,119/2);
+    sprite2.setOrigin(palaAncho/2,palaLargo/2);
     //Cojo el sprite que me interesa por defecto del sheet
-    sprite2.setTextureRect(sf::IntRect(0*26, 0*119, 26, 119));
+    sprite2.setTextureRect(sf::IntRect(0*palaAncho, 0*palaLargo, palaAncho, palaLargo));
     // Lo dispongo en la pantalla
     sprite2.setPosition(40, 240);
     
@@ -118,7 +119,7 @@ int main()
     // ejecutar el programa mientras la ventana esté abierta
     while (window.isOpen())
     {
-       /* std::string m = std::to_string(toques);
+        /*std::string m = std::to_string(toques);
         beats.setString(m);*/
         
         // limpiamos la ventana con el color negro
@@ -126,28 +127,23 @@ int main()
         // verificamos los bordes de la ventana y cambiamos
         // el signo del incremento de x,y
         
-        // Control de rebote Techo y suelo eje Y
+        // Control de rebote en pantalla
+        if (x <= pared_izq+radio)
+            xincremento = abs(xincremento);
+        if (x >= pared_der-radio)
+            xincremento =-xincremento;
         if (y <= techo+radio)
             yincremento = abs(yincremento);
         if (y >= piso-radio)
             yincremento =-yincremento;
+              
         
         // rebote BOSS
         if (x <= sprite2.getPosition().x+palaAncho) 
              xincremento = abs(xincremento);
-        
-        // rebote J1 /****** FALLA  ALTURA EN LA CONDICION********/
-        if (x >= sprite.getPosition().x-palaAncho && y<= sprite.getPosition().y+palaLargo/2 ){
-            xincremento =-xincremento;
-            toques++;
-            cout<<toques<<endl;
-        }  
-        
+               
         // si toca La pared DCHA
-        if (x >= sprite.getPosition().x-palaAncho && y>= sprite.getPosition().y+palaLargo/2 &&
-                x>= spriteBola.getPosition().x){
-            
-           
+        if (x >= pared_der-radio){          
             vidasJ1--;
             toques = 0;
             x = anchoJuego/2;
@@ -160,14 +156,20 @@ int main()
             }
             
         }
+        
+       // rebote J1 /****** FALLA  ALTURA EN LA CONDICION********/
+       if (x+radio >= sprite.getPosition().x-palaAncho/2
+               && y<sprite.getPosition().y+palaLargo/2
+               && y> sprite.getPosition().y-palaLargo/2){
+           
+            xincremento =-xincremento;
+            toques++;
+            cout<<toques<<endl;
+        }
             
-        
-        
         // actualizo valores
         x = x + xincremento;
         y = y + yincremento;
-        
-        
         
         //pasamos las nuevas coordenadas al objeto circulo1
         spriteBola.setPosition(x,y);
