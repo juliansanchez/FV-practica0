@@ -20,7 +20,7 @@ int main()
     window.setVerticalSyncEnabled(true);
     
     int x = 1, y = 1;
-    int xincremento = 5, yincremento = 5;
+    int xincremento = 4, yincremento = 4;
     int pared_izq = 0, pared_der = anchoJuego;
     int techo = 70, piso = 410;
     
@@ -128,13 +128,8 @@ int main()
     pauseMessage.setColor(sf::Color::White);
     pauseMessage.setString("Welcome to SFML pong!\nPress space to start the game");
 
-   
-
-
+  
     bool isPlaying = false;
-    
-    
-    
     
     /*******************************/
     // ejecutar el programa mientras la ventana esté abierta
@@ -175,6 +170,7 @@ int main()
             if(vidasJ1 == 0){
                 cout<<"Game Over"<<endl;
                 isPlaying=false;
+                
                  
             }
             
@@ -190,19 +186,25 @@ int main()
             cout<<toques<<endl;
         }
             
-        // actualizo valores
-        x = x + xincremento;
-        y = y + yincremento;
+        
         
         //pasamos las nuevas coordenadas al objeto circulo1
-        spriteBola.setPosition(x,y);
-         
-        // JUGADOR BOSS
-        if(y >= techo+palaLargo/2 && y <= piso-palaLargo/2){                  
-            for(int i = 0; i<=y;i++){
-                sprite2.setPosition(40,i);
+        if(isPlaying){
+            // actualizo valores
+            x = x + xincremento;
+            y = y + yincremento;
+            spriteBola.setPosition(x,y);
+            
+            // JUGADOR BOSS
+            if(y >= techo+palaLargo/2 && y <= piso-palaLargo/2){                  
+                for(int i = 0; i<=y;i++){
+                    sprite2.setPosition(40,i);
+                }
             }
         }
+            
+         
+        
         //verificamos todos los eventos de la ventana 
         sf::Event evento;
         while (window.pollEvent(evento))
@@ -212,15 +214,19 @@ int main()
                 {
                     if (!isPlaying)
                     {
-                        // (re)start the game
-                        isPlaying = true;
-                        
+             
                         spriteBola.setPosition(anchoJuego/2, altoJuego/2);
                         sprite.setPosition(600, 240);
                         sprite2.setPosition(40, 240);
                         spriteFondo.setPosition(0, 0);
                         spriteMarcador.setPosition(50, 8);
                         
+                        vidasJ1=3;
+                        vidasJ2=3;
+                        toques=0;
+                        
+                        // (re)start the game
+                        isPlaying = true;
                         
 
                     }
