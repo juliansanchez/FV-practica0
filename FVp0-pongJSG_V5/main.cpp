@@ -209,6 +209,9 @@ int main()
         sf::Event evento;
         while (window.pollEvent(evento))
         {
+            if ((evento.type == sf::Event::KeyPressed) && (evento.key.code == sf::Keyboard::Escape)){
+                            window.close();
+                }
             // Space key pressed: play
                 if ((evento.type == sf::Event::KeyPressed) && (evento.key.code == sf::Keyboard::Space))
                 {
@@ -225,8 +228,10 @@ int main()
                         vidasJ2=3;
                         toques=0;
                         
+                        
                         // (re)start the game
                         isPlaying = true;
+                        
                         
 
                     }
@@ -235,18 +240,18 @@ int main()
                 
                 switch(evento.type){
                 
-                //Si se recibe el evento de cerrar la ventana la cierro
-                case sf::Event::Closed:
-                    window.close();
+                    //Si se recibe el evento de cerrar la ventana la cierro
+                    case sf::Event::Closed:
+                        window.close();
+                        break;
+
+                    // para cuando esta parado
+                    case sf::Event::KeyReleased:
+
                     break;
-                   
-                // para cuando esta parado
-                case sf::Event::KeyReleased:
-                
-                break;
-                
-                //Se pulsó una tecla, imprimo su codigo
-                case sf::Event::KeyPressed:
+
+                    //Se pulsó una tecla, imprimo su codigo
+                    case sf::Event::KeyPressed:
                     
                     //Verifico si se pulsa alguna tecla de movimiento
                     switch(evento.key.code) {
@@ -298,7 +303,9 @@ int main()
             window.draw(sprite2);
         }
         else{
+            string saludo = "Vuelve a jugar !";
             window.draw(pauseMessage);
+            window.draw(beats);
         }
          
         // window.draw(beats);
