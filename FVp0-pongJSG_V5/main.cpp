@@ -34,12 +34,28 @@ int main()
         std::cerr << "Error cargando la fuente";
         exit(0);
     }
+    /*******************************/
+    // Declare and load a font
+    sf::Font font;
+    font.loadFromFile("resources/fuente.ttf");
+    // Create a text
+    sf::Text text("Pulsa espacio para comenzar!", font);
+    text.setCharacterSize(30);
+    text.setStyle(sf::Text::Regular);
+    text.setPosition(anchoJuego/2,20);
+    
+    text.setColor(sf::Color::White);
+    
+    
+    
+    /*******************************/
 
     // Creamos un objeto texto
     sf::Text beats;
     beats.setFont(fuente);
+    beats.setCharacterSize(30);
     beats.setPosition(anchoJuego/2,70);
-    beats.setColor(sf::Color(255,255,255));
+    beats.setColor(sf::Color::White);
     
     sf::Text vida1;
     vida1.setFont(fuente);
@@ -121,7 +137,7 @@ int main()
     
 
     /********************************/
-      // Initialize the pause message
+    // Initialize the pause message
     sf::Text pauseMessage;
     pauseMessage.setCharacterSize(40);
     pauseMessage.setPosition(anchoJuego/2, altoJuego/2);
@@ -295,17 +311,23 @@ int main()
         
       
         if(isPlaying){
+          
+            window.draw(beats);
+           
             
             window.draw(spriteBola);
             window.draw(spriteFondo);
             window.draw(spriteMarcador);
             window.draw(sprite);
             window.draw(sprite2);
+            
         }
         else{
-            string saludo = "Vuelve a jugar !";
+            
             window.draw(pauseMessage);
-            window.draw(beats);
+            // Draw it
+    window.draw(text);
+            
         }
          
         // window.draw(beats);
