@@ -9,6 +9,7 @@ using namespace std;
 
 int main()
 {
+
     int anchoJuego = 640;
     int altoJuego = 480;
     int radio = 14;
@@ -19,7 +20,7 @@ int main()
     window.setVerticalSyncEnabled(true);
     
     int x = 1, y = 1;
-    int xincremento = 5, yincremento = 5;
+    int xincremento = 4, yincremento = 4;
     int pared_izq = 0, pared_der = anchoJuego;
     int techo = 70, piso = 410;
     
@@ -80,6 +81,7 @@ int main()
     sprite.setTextureRect(sf::IntRect(0*palaAncho, 0*palaLargo, palaAncho, palaLargo));
     // Lo dispongo en la pantalla
     sprite.setPosition(600, 240);
+    
 
     /* PLAYER 2 */
     //Le pongo el centroide donde corresponde
@@ -89,6 +91,7 @@ int main()
     // Lo dispongo en la pantalla
     sprite2.setPosition(40, 240);
     
+    
     /*FONDO*/
     //Le pongo el centroide donde corresponde
     spriteFondo.setOrigin(0,0);
@@ -96,6 +99,7 @@ int main()
     spriteFondo.setTextureRect(sf::IntRect(0, 0, 640, 480));
     // Lo dispongo en el centro de la pantalla
     spriteFondo.setPosition(0, 0);
+    
     
     /*MARCADOR*/
     //Le pongo el centroide donde corresponde
@@ -116,6 +120,18 @@ int main()
     
     
 
+    /********************************/
+      // Initialize the pause message
+    sf::Text pauseMessage;
+    pauseMessage.setCharacterSize(40);
+    pauseMessage.setPosition(anchoJuego/2, altoJuego/2);
+    pauseMessage.setColor(sf::Color::White);
+    pauseMessage.setString("Welcome to SFML pong!\nPress space to start the game");
+
+  
+    bool isPlaying = false;
+    
+    /*******************************/
     // ejecutar el programa mientras la ventana esté abierta
     while (window.isOpen())
     {
@@ -153,11 +169,14 @@ int main()
             
             if(vidasJ1 == 0){
                 cout<<"Game Over"<<endl;
+                isPlaying=false;
+                
+                 
             }
             
         }
         
-       // rebote J1 /****** FALLA  ALTURA EN LA CONDICION********/
+       // REBOTE J1 
        if (x+radio >= sprite.getPosition().x-palaAncho/2
                && y<sprite.getPosition().y+palaLargo/2
                && y> sprite.getPosition().y-palaLargo/2){
@@ -167,37 +186,72 @@ int main()
             cout<<toques<<endl;
         }
             
-        // actualizo valores
-        x = x + xincremento;
-        y = y + yincremento;
+        
         
         //pasamos las nuevas coordenadas al objeto circulo1
-        spriteBola.setPosition(x,y);
-         
-        // JUGADOR BOSS
-        if(y >= techo+palaLargo/2 && y <= piso-palaLargo/2){                  
-            for(int i = 0; i<=y;i++){
-                sprite2.setPosition(40,i);
+        if(isPlaying){
+            // actualizo valores
+            x = x + xincremento;
+            y = y + yincremento;
+            spriteBola.setPosition(x,y);
+            
+            // JUGADOR BOSS
+            if(y >= techo+palaLargo/2 && y <= piso-palaLargo/2){                  
+                for(int i = 0; i<=y;i++){
+                    sprite2.setPosition(40,i);
+                }
             }
         }
+            
+         
+        
         //verificamos todos los eventos de la ventana 
         sf::Event evento;
         while (window.pollEvent(evento))
         {
-            switch(evento.type){
+            if ((evento.type == sf::Event::KeyPressed) && (evento.key.code == sf::Keyboard::Escape)){
+                            window.close();
+                }
+            // Space key pressed: play
+                if ((evento.type == sf::Event::KeyPressed) && (evento.key.code == sf::Keyboard::Space))
+                {
+                    if (!isPlaying)
+                    {
+             
+                        spriteBola.setPosition(anchoJuego/2, altoJuego/2);
+                        sprite.setPosition(600, 240);
+                        sprite2.setPosition(40, 240);
+                        spriteFondo.setPosition(0, 0);
+                        spriteMarcador.setPosition(50, 8);
+                        
+                        vidasJ1=3;
+                        vidasJ2=3;
+                        toques=0;
+                        
+                        
+                        // (re)start the game
+                        isPlaying = true;
+                        
+                        
+
+                    }
+                } 
+            if(isPlaying){
                 
-                //Si se recibe el evento de cerrar la ventana la cierro
-                case sf::Event::Closed:
-                    window.close();
+                switch(evento.type){
+                
+                    //Si se recibe el evento de cerrar la ventana la cierro
+                    case sf::Event::Closed:
+                        window.close();
+                        break;
+
+                    // para cuando esta parado
+                    case sf::Event::KeyReleased:
+
                     break;
-                    
-                // para cuando esta parado
-                case sf::Event::KeyReleased:
-                
-                break;
-                
-                //Se pulsó una tecla, imprimo su codigo
-                case sf::Event::KeyPressed:
+
+                    //Se pulsó una tecla, imprimo su codigo
+                    case sf::Event::KeyPressed:
                     
                     //Verifico si se pulsa alguna tecla de movimiento
                     switch(evento.key.code) {
@@ -220,8 +274,6 @@ int main()
                               
                         break;
                         
-                                                
-                        
                         //Tecla ESC para salir
                         case sf::Keyboard::Escape:
                             window.close();
@@ -234,19 +286,29 @@ int main()
                               
                     }
                 
-
-            }
+                }
+            }    
+            
         }
 
         window.clear();
         
-        window.draw(spriteBola);
-        window.draw(spriteFondo);
-        window.draw(spriteMarcador);
-        window.draw(sprite);
-        window.draw(sprite2);
-        
-        window.draw(beats);
+      
+        if(isPlaying){
+            
+            window.draw(spriteBola);
+            window.draw(spriteFondo);
+            window.draw(spriteMarcador);
+            window.draw(sprite);
+            window.draw(sprite2);
+        }
+        else{
+            string saludo = "Vuelve a jugar !";
+            window.draw(pauseMessage);
+            window.draw(beats);
+        }
+         
+        // window.draw(beats);
         // mostramos ventana en la pantalla
         window.display();
 
