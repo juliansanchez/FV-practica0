@@ -57,8 +57,6 @@ int main()
     beats.setPosition(anchoJuego/2,70);
     beats.setColor(sf::Color::White);
     
-    
-    
     // vidas usuario
     sf::Text vida1;
     vida1.setFont(fuente);
@@ -147,8 +145,7 @@ int main()
     /*******************************/
     // ejecutar el programa mientras la ventana esté abierta
     while (window.isOpen())
-    {
-                
+    {         
         // limpiamos la ventana con el color negro
         window.clear(sf::Color::Black);
         // verificamos los bordes de la ventana y cambiamos
@@ -197,7 +194,7 @@ int main()
         }
             
         
-        //pasamos las nuevas coordenadas al objeto circulo1
+        // comienza el juego
         if(isPlaying){
             // actualizo valores
             x = x + xincremento;
@@ -248,12 +245,7 @@ int main()
                     case sf::Event::Closed:
                         window.close();
                         break;
-
-                    // para cuando esta parado
-                    case sf::Event::KeyReleased:
-
-                    break;
-
+             
                     //Se pulsó una tecla, imprimo su codigo
                     case sf::Event::KeyPressed:
                     
