@@ -289,14 +289,18 @@ int main()
         // refrescamos la pantalla
         window.clear();
         
- 
         // si estamos jugando mostramos los objetos
         if(isPlaying){
-           
+                
+            // std::string v1 = std::to_string(vidasJ1);
+            // vida1.setString(v1);
+            
+            // std::string v2 = std::to_string(vidasJ2);
+            // vida2.setString(v2);
+            
             // std::string m = std::to_string(toques);
-           // beats.setString(m);
-            
-            
+            // beats.setString(m);
+           
             // beats.setString(to_string(toques));
 
             window.draw(beats); // no funciona mostrar
