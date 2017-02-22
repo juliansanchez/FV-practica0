@@ -5,22 +5,27 @@
 
 using namespace std;
 
+// velocidades de las palas
 #define kVel 10
 
 int main()
 {
-
+    // dimensiones del juego
     int anchoJuego = 640;
     int altoJuego = 480;
+    // dimensiones de objetos para colisiones
     int radio = 14;
     int palaLargo = 120, palaAncho=26; 
+    
    //Creamos una ventana 
-    sf::RenderWindow window(sf::VideoMode(anchoJuego, altoJuego), "P0. Fundamentos de los Videojuegos. DCCIA");
+    sf::RenderWindow window(sf::VideoMode(anchoJuego, altoJuego), "P0-PONG! JSG");
     // sincronizamos la frecuencia de la ventana con la del monitor
     window.setVerticalSyncEnabled(true);
     
+    // incrementos de la bola
     int x = 1, y = 1;
     int xincremento = 4, yincremento = 4;
+    // limites de la ventana para colisiones
     int pared_izq = 0, pared_der = anchoJuego;
     int techo = 70, piso = 410;
     
@@ -29,45 +34,45 @@ int main()
     int vidasJ2 = 3;
     int toques = 0;
     
+    // cargamo sla fuente para los textos
     sf::Font fuente;
     if (!fuente.loadFromFile("resources/fuente.ttf")){
         std::cerr << "Error cargando la fuente";
         exit(0);
-    }
-    /*******************************/
-    // Declare and load a font
-    sf::Font font;
-    font.loadFromFile("resources/fuente.ttf");
-    // Create a text
-    sf::Text text("Pulsa espacio para comenzar!", font);
-    text.setCharacterSize(30);
-    text.setStyle(sf::Text::Regular);
-    text.setPosition(anchoJuego/2,20);
+    }    
     
-    text.setColor(sf::Color::White);
+    // Creamos los objetos texto
+    // TEXTO PARA LA PAUSA
+    sf::Text textoPausa("Pulsa espacio para comenzar!", fuente);
+    textoPausa.setCharacterSize(30);
+    textoPausa.setStyle(sf::Text::Regular);
+    textoPausa.setPosition(anchoJuego/2,20);
+    textoPausa.setColor(sf::Color::White);
+  
     
-    
-    
-    /*******************************/
-
-    // Creamos un objeto texto
+    // puntuacion 
     sf::Text beats;
     beats.setFont(fuente);
     beats.setCharacterSize(30);
     beats.setPosition(anchoJuego/2,70);
     beats.setColor(sf::Color::White);
     
+    
+    
+    // vidas usuario
     sf::Text vida1;
     vida1.setFont(fuente);
     vida1.setPosition(40,70);
     vida1.setColor(sf::Color(255,255,255));
     
+    // vidas boss
     sf::Text vida2;
     vida2.setFont(fuente);
     vida2.setPosition(240,70);
     vida2.setColor(sf::Color(255,255,255));
 
-    //Cargo la imagen donde reside la textura del sprite
+    
+    // cargamos las texturas para los objetos
     sf::Texture texJ1;
     sf::Texture texJ2;
     sf::Texture texbola;
@@ -83,14 +88,15 @@ int main()
         exit(0);
     }
     
-    //Y creo el spritesheet a partir de la imagen anterior
+    
+    // creamos los sprites o elementos
     sf::Sprite sprite(texJ1);
     sf::Sprite sprite2(texJ2);
     sf::Sprite spriteFondo(fondo);
     sf::Sprite spriteMarcador(texmarcador);
     sf::Sprite spriteBola(texbola);
     
-    /* PLAYER 1 */
+         /* PLAYER 1 */
     //Le pongo el centroide donde corresponde
     sprite.setOrigin(palaAncho/2,palaLargo/2);
     //Cojo el sprite que me interesa por defecto del sheet
@@ -133,27 +139,16 @@ int main()
     spriteBola.setColor(sf::Color(255,255,0));
     // Lo dispongo en el centro de la pantalla
     spriteBola.setPosition(anchoJuego/2, altoJuego/2);
+   
     
-    
-
-    /********************************/
-    // Initialize the pause message
-    sf::Text pauseMessage;
-    pauseMessage.setCharacterSize(40);
-    pauseMessage.setPosition(anchoJuego/2, altoJuego/2);
-    pauseMessage.setColor(sf::Color::White);
-    pauseMessage.setString("Welcome to SFML pong!\nPress space to start the game");
-
-  
+    // diferenciar pantalla juego y pausa
     bool isPlaying = false;
     
     /*******************************/
     // ejecutar el programa mientras la ventana esté abierta
     while (window.isOpen())
     {
-        /*std::string m = std::to_string(toques);
-        beats.setString(m);*/
-        
+                
         // limpiamos la ventana con el color negro
         window.clear(sf::Color::Black);
         // verificamos los bordes de la ventana y cambiamos
@@ -174,20 +169,19 @@ int main()
         if (x <= sprite2.getPosition().x+palaAncho) 
              xincremento = abs(xincremento);
                
-        // si toca La pared DCHA
+        // si toca La pared DCHA, pierde punto
         if (x >= pared_der-radio){          
             vidasJ1--;
             toques = 0;
             x = anchoJuego/2;
             y = altoJuego/2;
+            
             cout<<"Vidas: "<<vidasJ1<<endl;
             cout<<"Punto perdido"<<endl;
             
             if(vidasJ1 == 0){
                 cout<<"Game Over"<<endl;
-                isPlaying=false;
-                
-                 
+                isPlaying=false;          
             }
             
         }
@@ -203,7 +197,6 @@ int main()
         }
             
         
-        
         //pasamos las nuevas coordenadas al objeto circulo1
         if(isPlaying){
             // actualizo valores
@@ -218,9 +211,7 @@ int main()
                 }
             }
         }
-            
-         
-        
+       
         //verificamos todos los eventos de la ventana 
         sf::Event evento;
         while (window.pollEvent(evento))
@@ -233,23 +224,20 @@ int main()
                 {
                     if (!isPlaying)
                     {
-             
+                        // reiniciamos posiciones de los objetos
                         spriteBola.setPosition(anchoJuego/2, altoJuego/2);
                         sprite.setPosition(600, 240);
                         sprite2.setPosition(40, 240);
                         spriteFondo.setPosition(0, 0);
                         spriteMarcador.setPosition(50, 8);
                         
+                        // reiniciamos los contadores 
                         vidasJ1=3;
                         vidasJ2=3;
                         toques=0;
                         
-                        
                         // (re)start the game
                         isPlaying = true;
-                        
-                        
-
                     }
                 } 
             if(isPlaying){
@@ -273,67 +261,60 @@ int main()
                     switch(evento.key.code) {
                         
                         //Mapeo del cursor
-                        case sf::Keyboard::Up:
-                            sprite.setTextureRect(sf::IntRect(0*26, 0*119, 26, 119));
+                        case sf::Keyboard::Up:                           
                             if(sprite.getPosition().y >= techo+palaLargo/2+5){
                                 sprite.move(0,-kVel);
-                            }
-                             
+                            }                            
                         break;
                         
-                        case sf::Keyboard::Down:
-                            sprite.setTextureRect(sf::IntRect(0*26, 0*119, 26, 119));
-                            
+                        case sf::Keyboard::Down:                                                
                             if(sprite.getPosition().y <= piso-palaLargo/2-5){
                                 sprite.move(0,kVel);
-                            }
-                              
+                            }                              
                         break;
                         
                         //Tecla ESC para salir
                         case sf::Keyboard::Escape:
                             window.close();
                         break;
-                        
+                    
                         //Cualquier tecla desconocida se imprime por pantalla su código
                         default:
                             std::cout << evento.key.code << std::endl;
-                        break;
-                              
-                    }
-                
+                        break;                             
+                    }               
                 }
-            }    
-            
+            }             
         }
-
+        // refrescamos la pantalla
         window.clear();
         
-      
+ 
+        // si estamos jugando mostramos los objetos
         if(isPlaying){
-          
-            window.draw(beats);
            
+            // std::string m = std::to_string(toques);
+           // beats.setString(m);
+            
+            
+            // beats.setString(to_string(toques));
+
+            window.draw(beats); // no funciona mostrar
+            window.draw(vida1); // no funciona mostrar
+            window.draw(vida2); // no funciona mostrar
             
             window.draw(spriteBola);
             window.draw(spriteFondo);
             window.draw(spriteMarcador);
             window.draw(sprite);
-            window.draw(sprite2);
-            
+            window.draw(sprite2);            
         }
         else{
-            
-            window.draw(pauseMessage);
-            // Draw it
-    window.draw(text);
-            
+            // Mensaje de PAUSA
+            window.draw(textoPausa); 
         }
-         
-        // window.draw(beats);
         // mostramos ventana en la pantalla
         window.display();
-
     }
 
     return 0;
